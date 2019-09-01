@@ -14,8 +14,10 @@ def solve_2D_poisson_fd(Nx, Ny, dx, dy, f, u_b=0, u_t=0, u_l=0, u_r=0):
         Grids number.
     dx, dy: scaler
         Resolution.
-    f: array with size=(Nx-2)*(Ny-2)
+    f: 1-d array with size=(Nx-2)*(Ny-2), or 2-d array with size=(Ny-2, Nx-2)
         The right hand side of poisson equation.
+        The boundary of 'f' is not necessary, thus reducing the size from
+        (Ny, Nx) to (Ny-2, Nx-2).
     u_b, u_t: scaler or 1-d array with size=(Nx-2)
         The dirichlet boundary condition of bottom and top side.
         Default is 0.
@@ -52,6 +54,8 @@ def solve_2D_poisson_fd(Nx, Ny, dx, dy, f, u_b=0, u_t=0, u_l=0, u_r=0):
         u_r = u_r.reshape((Ny-2, 1))
     elif isinstance(u_r, (int, float)):
         u_r = np.ones((Ny-2, 1)) * u_r
+        
+    f = np.reshape(f, ((Nx-2)*(Ny-2), 1))
     
     # build A matrix
     size = (Nx-2) * (Ny-2)
